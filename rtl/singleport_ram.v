@@ -15,9 +15,6 @@ module singleport_ram #(
     always@(posedge clka) begin
         if (wea)
             ram[addra] <= dina;
-    end
-    
-    always@(posedge clka) begin
         douta <= ram[addra];
     end
 

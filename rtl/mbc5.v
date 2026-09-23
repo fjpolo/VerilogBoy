@@ -70,8 +70,12 @@ module mbc5(
                 case (vb_addr)
                     16'h0000: ram_en <= (vb_d[3:0] == 4'hA) ? 1'b1 : 1'b0;
                     16'h1000: ram_en <= (vb_d[3:0] == 4'hA) ? 1'b1 : 1'b0;
-                    16'h2000: rom_bank[7:0] <= vb_d[7:0];
-                    16'h3000: rom_bank[8] <= vb_d[0];
+                    16'h2000: rom_bank[7:0] <= (vb_d[7:0] == 8'd0) ? 8'd1 : vb_d[7:0];
+                    16'h3000: begin
+                        rom_bank[8] <= vb_d[0];
+                        if (vb_d[7:1] != 7'd0)
+                            rom_bank[7:0] <= vb_d[7:0];
+                    end
                     16'h4000: ram_bank[3:0] <= vb_d[3:0];
                     16'h5000: ram_bank[3:0] <= vb_d[3:0];
                 endcase

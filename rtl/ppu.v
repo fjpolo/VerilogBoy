@@ -155,8 +155,8 @@ module ppu(
     // PPU Memories
     
     // 8 bit WR, 16 bit RD, 160Bytes OAM
-    reg [7:0] oam_u [0: 79];
-    reg [7:0] oam_l [0: 79];
+    (* syn_ramstyle = "distributed_ram" *) reg [7:0] oam_u [0: 79];
+    (* syn_ramstyle = "distributed_ram" *) reg [7:0] oam_l [0: 79];
     reg [7:0] oam_rd_addr_int;
     wire [7:0] oam_rd_addr;
     wire [7:0] oam_wr_addr;
@@ -357,10 +357,10 @@ module ppu(
     end
     
     reg [5:0] oam_search_count; // Counter during OAM search stage
-    reg [5:0] obj_visible_list [0:9]; // Total visible list
-    reg [7:0] obj_trigger_list [0:9]; // Where the obj should be triggered
-    reg [7:0] obj_y_list [0:9]; // Where the obj is
-    reg obj_valid_list [0:9]; // Is obj visible entry valid
+    reg [9:0][5:0] obj_visible_list; // Total visible list
+    reg [9:0][7:0] obj_trigger_list; // Where the obj should be triggered
+    reg [9:0][7:0] obj_y_list; // Where the obj is
+    reg [9:0] obj_valid_list; // Is obj visible entry valid
     reg [3:0] oam_visible_count; // ???
     
     wire [7:0] oam_search_x;

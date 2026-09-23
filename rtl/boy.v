@@ -72,7 +72,7 @@ module boy(
         .fault(fault));
         
     // High RAM
-    reg [7:0] high_ram [0:127];
+    /* synthesis syn_ramstyle="distributed_ram" */ reg [7:0] high_ram [0:127];
     wire high_ram_rd = cpu_rd;
     reg high_ram_wr;
     wire [6:0] high_ram_a = cpu_a[6:0];
@@ -341,9 +341,18 @@ module boy(
     assign keypad_reg[7:6] = 2'b11;
     assign keypad_reg[5:4] = keypad_high[1:0];
     assign keypad_reg[3:0] = 
-        ~(((keypad_high[1] == 1'b1) ? (key[7:4]) : 4'h0) | 
-          ((keypad_high[0] == 1'b1) ? (key[3:0]) : 4'h0)); 
-    assign int_key_req = (keypad_reg[3:0] != 4'hf) ? (1'b1) : (1'b0);
+        ~(((keypad_high[1] == 1'b0) ? (key[3:0]) : 4'h0) | 
+          ((keypad_high[0] == 1'b0) ? (key[7:4]) : 4'h0)); 
+
+    reg [3:0] keypad_reg_prev;
+    always @(posedge clk) begin
+        if (rst)
+            keypad_reg_prev <= 4'hf;
+        else
+            keypad_reg_prev <= keypad_reg[3:0];
+    end
+    wire [3:0] key_press_edge = keypad_reg_prev & ~keypad_reg[3:0];
+    assign int_key_req = (key_press_edge != 4'h0) ? (1'b1) : (1'b0);
 
     // External Bus
     reg ext_cpu_wr;  // wire

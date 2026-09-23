@@ -115,7 +115,7 @@ module sound(
     wire        ch2_on_flag;
     wire        ch1_on_flag;
     
-    reg [7:0] wave [0:15];
+    /* synthesis syn_ramstyle="registers" */ reg [7:0] wave [0:15];
     wire [3:0] wave_addr_ext = a[3:0];
     wire [3:0] wave_addr_int;
     wire [3:0] wave_addr = (ch3_on) ? (wave_addr_int) : (wave_addr_ext);
